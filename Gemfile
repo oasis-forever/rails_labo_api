@@ -30,6 +30,9 @@ gem 'dotenv-rails', '~> 2.7.6'
 
 gem "actionpack", ">= 6.1.3.2"
 
+# Json Web Tokens
+gem 'jwt'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 11.1.3', platforms: [:mri, :mingw, :x64_mingw]

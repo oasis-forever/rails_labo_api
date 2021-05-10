@@ -1,13 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Items', type: :request do
-  let!(:todo) { create(:todo) }
+  let(:user) { create(:user) }
+  let!(:todo) { create(:todo, created_by: user.id) }
   let!(:items) { create_list(:item, 10, todo_id: todo.id) }
   let(:todo_id) { todo.id }
   let(:id) { items.first.id }
+  let(:headers) { valid_headers }
 
   describe 'GET /todos/:todo_id/items/todo_id/items' do
-    before { get "/todos/#{todo_id}/items" }
+    before { get "/todos/#{todo_id}/items", params: {}, headers: headers }
 
     context 'when todo exists' do
       it 'returns all items' do
@@ -34,7 +36,7 @@ RSpec.describe 'Items', type: :request do
   end
 
   describe 'GET /todos/:todo_id/items/:id' do
-    before { get "/todos/#{todo_id}/items/#{id}" }
+    before { get "/todos/#{todo_id}/items/#{id}", params: {}, headers: headers }
 
     context 'when todo item exists' do
       it 'returns the item' do
@@ -61,10 +63,12 @@ RSpec.describe 'Items', type: :request do
   end
 
   describe 'POST /todos/:todo_id/items' do
-    let(:valid_attributes) { { name: 'Visit Narnia', done: false } }
+    let(:valid_attributes) { { name: 'Visit Narnia', done: false }.to_json }
 
     context 'when the request attributes are valid' do
-      before { post "/todos/#{todo_id}/items", params: valid_attributes }
+      before do
+        post "/todos/#{todo_id}/items", params: valid_attributes, headers: headers
+      end
 
       it 'creates a todo' do
         expect(json['name']).to eq('Visit Narnia')
@@ -76,7 +80,9 @@ RSpec.describe 'Items', type: :request do
     end
 
     context 'when a request attribute is invalid' do
-      before { post "/todos/#{todo_id}/items", params: {} }
+      before do
+        post "/todos/#{todo_id}/items", params: {}, headers: headers
+      end
 
       it 'returns a validation failure message' do
         expect(response.body).to match(/Validation failed: Name can't be blank/)
@@ -89,8 +95,11 @@ RSpec.describe 'Items', type: :request do
   end
 
   describe 'PUT /todos/:todo_id/items/:id' do
-    let(:valid_attributes) { { name: 'Mozart' } }
-    before { put "/todos/#{todo_id}/items/#{id}", params: valid_attributes }
+    let(:valid_attributes) { { name: 'Mozart' }.to_json }
+
+    before do
+      put "/todos/#{todo_id}/items/#{id}", params: valid_attributes, headers: headers
+    end
 
     context 'when the item exists' do
       it 'updates the todo item' do
@@ -117,7 +126,7 @@ RSpec.describe 'Items', type: :request do
   end
 
   describe 'DELETE /todos/:todo_id/items/:id' do
-    before { delete "/todos/#{todo_id}/items/#{id}" }
+    before { delete "/todos/#{todo_id}/items/#{id}", params: {}, headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

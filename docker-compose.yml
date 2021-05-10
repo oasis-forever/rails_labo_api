@@ -19,7 +19,6 @@ services:
       MYSQL_USERNAME: ${MYSQL_USERNAME_DEV}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD_DEV}
       MYSQL_HOST: ${MYSQL_HOST_DEV}
-      ROLLBAR_ACCESS_TOKEN: ${ROLLBAR_ACCESS_TOKEN}
     ports:
       - "5000:5000"
     command: sh -c "bundle install && yarn install && rm -f tmp/pids/server.pid && bin/rails s -b 0.0.0.0 -p 5000"

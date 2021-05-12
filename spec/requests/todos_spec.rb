@@ -9,13 +9,30 @@ RSpec.describe 'Todos API', type: :request do
   describe 'GET /todos' do
     before { get '/todos', params: {}, headers: headers }
 
-    it 'returns todos' do
-      expect(json).not_to be_empty
-      expect(json.size).to eq(10)
+    context 'V1' do
+      let(:headers) { valid_headers('v1') }
+
+      it 'returns todos' do
+        expect(json).not_to be_empty
+        expect(json.size).to eq(10)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
     end
 
-    it 'returns status code 200' do
-      expect(response).to have_http_status(200)
+    context 'V2' do
+      let(:headers) { valid_headers('v2') }
+
+      it 'returns a message' do
+        expect(json).not_to be_empty
+        expect(JSON.parse(response.body)['message']).to eq('This is the verion 2 of Todos')
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
     end
   end
 

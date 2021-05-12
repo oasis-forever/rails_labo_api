@@ -13,7 +13,6 @@ user = User.create do |user|
   user.password_confirmation = 'hogehogefoobar'
 end
 
-
 30.times.map do |t_id|
   Todo.create do |todo|
     todo.title = "Todo#{sprintf("%03d", t_id + 1)}"

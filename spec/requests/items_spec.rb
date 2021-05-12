@@ -8,8 +8,10 @@ RSpec.describe 'Items', type: :request do
   let(:id) { items.first.id }
   let(:headers) { valid_headers }
 
-  describe 'GET /todos/:todo_id/items/todo_id/items' do
-    before { get "/todos/#{todo_id}/items", params: {}, headers: headers }
+  describe 'GET /todos/:todo_id/items' do
+    before do
+      get "/todos/#{todo_id}/items", params: {}, headers: headers
+    end
 
     context 'when todo exists' do
       it 'returns all items' do
@@ -36,7 +38,9 @@ RSpec.describe 'Items', type: :request do
   end
 
   describe 'GET /todos/:todo_id/items/:id' do
-    before { get "/todos/#{todo_id}/items/#{id}", params: {}, headers: headers }
+    before do
+      get "/todos/#{todo_id}/items/#{id}", params: {}, headers: headers
+    end
 
     context 'when todo item exists' do
       it 'returns the item' do
@@ -70,7 +74,7 @@ RSpec.describe 'Items', type: :request do
         post "/todos/#{todo_id}/items", params: valid_attributes, headers: headers
       end
 
-      it 'creates a todo' do
+      it 'creates a todo item' do
         expect(json['name']).to eq('Visit Narnia')
       end
 
@@ -126,7 +130,9 @@ RSpec.describe 'Items', type: :request do
   end
 
   describe 'DELETE /todos/:todo_id/items/:id' do
-    before { delete "/todos/#{todo_id}/items/#{id}", params: {}, headers: headers }
+    before do
+      delete "/todos/#{todo_id}/items/#{id}", params: {}, headers: headers
+    end
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

@@ -7,7 +7,9 @@ RSpec.describe 'Todos API', type: :request do
   let(:headers) { valid_headers }
 
   describe 'GET /todos' do
-    before { get '/todos', params: {}, headers: headers }
+    before do
+      get '/todos', params: {}, headers: headers
+    end
 
     context 'V1' do
       let(:headers) { valid_headers('v1') }
@@ -37,7 +39,9 @@ RSpec.describe 'Todos API', type: :request do
   end
 
   describe 'GET /todos/:id' do
-    before { get "/todos/#{id}", params: {}, headers: headers }
+    before do
+      get "/todos/#{id}", params: {}, headers: headers
+    end
 
     context 'when the todo exists' do
       it 'returns the todo' do
@@ -65,11 +69,16 @@ RSpec.describe 'Todos API', type: :request do
 
   describe 'POST /todos' do
     let(:valid_attributes) do
-      { title: 'Learn Elm', created_by: user.id.to_s }.to_json
+      {
+        title: 'Learn Elm',
+        created_by: user.id.to_s
+      }.to_json
     end
 
     context 'when the request is valid' do
-      before { post '/todos', params: valid_attributes, headers: headers }
+      before do
+        post '/todos', params: valid_attributes, headers: headers
+      end
 
       it 'creates a todo' do
         expect(json['title']).to eq('Learn Elm')
@@ -82,9 +91,13 @@ RSpec.describe 'Todos API', type: :request do
 
     context 'when the request is invalid' do
       let(:invalid_attributes) do
-        { title: nil }.to_json
+        {
+          title: nil
+        }.to_json
       end
-      before { post '/todos', params: invalid_attributes, headers: headers }
+      before do
+        post '/todos', params: invalid_attributes, headers: headers
+      end
 
       it 'returns a validation failure message' do
         expect(json['message']).to match(/Validation failed: Title can't be blank/)
@@ -100,7 +113,10 @@ RSpec.describe 'Todos API', type: :request do
     let(:valid_attributes) { { title: 'Shopping' }.to_json }
 
     context 'when the todo exists' do
-      before { put "/todos/#{id}", params: valid_attributes, headers: headers }
+      before do
+        put "/todos/#{id}", params: valid_attributes, headers: headers
+      end
+
       it 'updates the todo' do
         updated_todo = Todo.find(id)
         expect(updated_todo.title).to eq('Shopping')
@@ -112,7 +128,10 @@ RSpec.describe 'Todos API', type: :request do
     end
 
     context 'when the todo does not exist' do
-      before { put "/todos/#{id}", params: valid_attributes, headers: headers }
+      before do
+        put "/todos/#{id}", params: valid_attributes, headers: headers
+      end
+
       let(:id) { 0 }
 
       it 'returns a not found message' do
@@ -126,7 +145,9 @@ RSpec.describe 'Todos API', type: :request do
   end
 
   describe 'DELETE /todos/:id' do
-    before { delete "/todos/#{id}", params: {}, headers: headers }
+    before do
+      delete "/todos/#{id}", params: {}, headers: headers
+    end
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
